@@ -79,11 +79,6 @@ void eleccionFunciones(int *funcion)
 {
 
 }*/
-//funcion para eliminar un producto de la lista
-/*void eliminarProducto(Map *listaProd, Producto *p)
-{
-
-}*/
 //main
 int main()
 {
@@ -268,3 +263,4 @@ void mostrarTodosProductos(Map *Mapa)
         p = nextMap(Mapa);
     }
 }
+//aefhajsedkf
