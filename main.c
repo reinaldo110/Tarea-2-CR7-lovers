@@ -14,11 +14,11 @@ typedef struct
 }Producto;
 
 //funciones 
-//void buscarArtista(List*, char*);
-//void buscarGenero(List*, char*);
+void buscarMarca(Map*, char*);
+void buscarTipo(Map*, char*);
 //void mostrarListas(List*);
-//void buscarNombre(List *, char *);
-//void mostrarTodasCan(List*);
+void buscarNombre(Map *, char *);
+void mostrarTodosProductos(Map*);
 //void mostrarUnaList(List* , char *);
 void exportarArchivo(char *, Map * );
 
@@ -122,6 +122,7 @@ Map * procesarArchivo(FILE *entrada)
         insertMap(listaProd, prod->nombre, prod);
     }
     Producto * p = firstMap(listaProd);
+    p= nextMap(listaProd);
     printf("%s\n", p->nombre);
     //insertar al final de la lista de canciones
     return listaProd;
@@ -130,16 +131,16 @@ Map * procesarArchivo(FILE *entrada)
 void eleccionFunciones(int *funcion)
 {
     printf("seleccione 0 para salir\n");
-    printf("Seleccione 1 para importar un archivo\n");//funcion esencial para la funci0nalidad del codigo
-    printf("Seleccione 2 para exportar a un archivo\n");
+    printf("Seleccione 1 para importar un archivo(listo)\n");//funcion esencial para la funci0nalidad del codigo
+    printf("Seleccione 2 para exportar a un archivo(listo)\n");
     printf("Seleccione 3 si quiere agregar una cancion a una lista\n");
-    printf("Seleccione 4 si quiere buscar una cancion por su nombre\n");
-    printf("Seleccione 5 si quiere buscar una cancion por su artista\n");
-    printf("Seleccione 6 si quiere buscar una cancion por su genero\n");
+    printf("Seleccione 4 si quiere buscar un producto por su tipo(listo)\n");
+    printf("Seleccione 5 si quiere buscar por marca del/los productos(listo)\n");
+    printf("Seleccione 6 si quiere buscar un producto por su nombre(listo)\n");
     printf("Seleccione 7 si quiere eliminar una cancion\n");
     printf("Seleccione 8 si quiere ver los nombre de las listas de reproduccion y su cantidad de canciones\n");
     printf("Seleccione 9 si quiere ver una lista de reproduciones y sus canciones\n");
-    printf("Seleccione 10 si quiere ver todas las canciones de todas las listas\n");
+    printf("Seleccione 10 si quiere ver todos los productos(listo)\n");
     scanf("%i",funcion);//funcion que quiere ingresar
     
 
@@ -290,31 +291,31 @@ int main()
             p=leerCancion(funcion);
             agregarCancion(listaProd, p);
             break;
-
-            case 4:
-            printf("Ingrese nombre de la cancion a buscar: ");
+            */
+            case 6:
+            printf("Ingrese nombre del producto: ");
             getchar();
             fgets(busq, 100, stdin);
             busq[strcspn( busq, "\n" )] = '\0';
             buscarNombre(listaProd, busq);
             break;
-
-            case 5:
-            printf("Ingrese nombre del artista a buscar: ");
-            getchar();
-            fgets(busq, 100, stdin);
-            busq[strcspn( busq, "\n" )] = '\0';
-            buscarArtista(listaProd, busq);
-            break;
-
-            case 6:
-            printf("Ingrese nombre del genero a buscar: ");
-            getchar();
-            fgets(busq, 100, stdin);
-            busq[strcspn( busq, "\n" )] = '\0';
-            buscarGenero(listaProd, busq);
-            break;
             
+            case 5:
+            printf("Ingrese nombre de la marca: ");
+            getchar();
+            fgets(busq, 100, stdin);
+            busq[strcspn( busq, "\n" )] = '\0';
+            buscarMarca(listaProd, busq);
+            break;
+        
+            case 4:
+            printf("Ingrese el tipo de producto: ");
+            getchar();
+            fgets(busq, 100, stdin);
+            busq[strcspn( busq, "\n" )] = '\0';
+            buscarTipo(listaProd, busq);
+            break;
+            /*
 
             case 7:
             p=leerCancion(funcion);
@@ -333,10 +334,10 @@ int main()
             Nlista[strlen (Nlista) - 1] = '\0';
             mostrarUnaList(listaProd, Nlista);
             break;
-
+            */
             case 10:
-            mostrarTodasCan(listaProd);
-            break;*/
+            mostrarTodosProductos(listaProd);
+            break;
 
             default:
             printf("Numero ingresado no valido. Ingrese un numero valido\n");
@@ -351,93 +352,50 @@ int main()
     }
 }
 //funcion que busca una cancion segun el artista mostrando todas las canciones de esta 
-/*void buscarArtista(List *Lista, char *nombre)
+void buscarTipo(Map *Mapa, char *tipo)
 {
-    List * listaAct = firstList(Lista);
-    Producto * posLista = firstList(listaAct);
-    int contListas = 0;
-    int check = 0;
-    while (listaAct != NULL)
+    int a=0;
+    Producto * p = firstMap(Mapa);
+    while(p!=NULL)
     {
-        listaAct = nextList(Lista);
-        contListas++;
-    }
-    listaAct = firstList(Lista);
-    while (listaAct != NULL)
-    {
-        if (strcmp(nombre, posLista->artista) == 0)
+        if(stricmp(p->tipo,tipo)==0)
         {
-            printf("Nombre: %s\n", posLista->nombCancion);
-            printf("Artista: %s\n", posLista->artista);
-            printf("Genero: %s\n", posLista->genero);
-            printf("Año: %s\n", posLista->anyo);
-            printf("Lista: %s\n", posLista->lista);
-            posLista = nextList(listaAct);
-            check++;
-            if (posLista == NULL)
-            {
-                listaAct = nextList(Lista);
-                if (listaAct == NULL) break;
-                posLista = firstList(listaAct);
-            }
+            printf("%s,", p->nombre);
+            printf("%s,", p->marca);
+            printf("%s,", p->tipo);
+            printf("%i,", p->stock); 
+            printf("%i$\n", p->precio);
+            a++;
         }
-        else
-        {
-            posLista = nextList(listaAct);
-            if (posLista == NULL)
-            {
-                listaAct = nextList(Lista);
-                if (listaAct == NULL) break;
-                posLista = firstList(listaAct);
-            }
-        }
+        p= nextMap(Mapa);
+        
     }
-    if (check == 0) printf("No se encontraron canciones del artista %s.\n",nombre);
-}*/
+    if(a==0)printf("la marca no existe\n");
+
+}
 //funcion que busca una cancion segun el genero que esta tenga 
-/*void buscarGenero(List *Lista, char *genero)
+void buscarMarca(Map *Mapa, char *marca)
 {
-    List * listaAct = firstList(Lista);
-    Producto * posLista = firstList(listaAct);
-    int contListas = 0;
-    int check = 0;
-    while (listaAct != NULL)
+    int a=0;
+    Producto * p = firstMap(Mapa);
+    while(p!=NULL)
     {
-        listaAct = nextList(Lista);
-        contListas++;
-    }
-    listaAct = firstList(Lista);
-    while (listaAct != NULL)
-    {
-        if (strcmp(genero, posLista->genero) == 0)
+        if(stricmp(p->marca,marca)==0)
         {
-            printf("Nombre: %s\n", posLista->nombCancion);
-            printf("Artista: %s\n", posLista->artista);
-            printf("Genero: %s\n", posLista->genero);
-            printf("Año: %s\n", posLista->anyo);
-            printf("Lista: %s\n", posLista->lista);
-            posLista = nextList(listaAct);
-            check++;
-            if (posLista == NULL)
-            {
-                listaAct = nextList(Lista);
-                if (listaAct == NULL) break;
-                posLista = firstList(listaAct);
-            }
+            printf("%s,", p->nombre);
+            printf("%s,", p->marca);
+            printf("%s,", p->tipo);
+            printf("%i,", p->stock); 
+            printf("%i$\n", p->precio);
+            a++;
         }
-        else
-        {
-            posLista = nextList(listaAct);
-            if (posLista == NULL)
-            {
-                listaAct = nextList(Lista);
-                if (listaAct == NULL) break;
-                posLista = firstList(listaAct);
-            }
-        }
+        p= nextMap(Mapa);
+        
     }
-    if (check == 0) printf("No se encontraron canciones del genero %s.\n",genero);
-}*/
+    if(a==0)printf("la marca no existe\n");
+}
+
+
 //funcion que genera un archivo y exporta todas la listas de canciones a el
 void exportarArchivo(char *nombre, Map * lista)
 {
@@ -456,50 +414,26 @@ void exportarArchivo(char *nombre, Map * lista)
     fclose(fpt);
 }
 //funcion que busca canciones segun el nombre que tengan 
-/*void buscarNombre(List *Lista, char *nombre)
+void buscarNombre(Map *Mapa, char *nombre)
 {
-    List * listaAct = firstList(Lista);
-    Producto * posLista = firstList(listaAct);
-    int contListas = 0;
-    int check = 0;
-    while (listaAct != NULL)
+    int a=0;
+    Producto * p = firstMap(Mapa);
+    while(p!=NULL)
     {
-        listaAct = nextList(Lista);
-        contListas++;
-    }
-    listaAct = firstList(Lista);
-    for (int i = 0; i < contListas; i++)
-    {
-        if (check != 0) break;
-        while (posLista != NULL)
+        if(stricmp(p->nombre,nombre)==0)
         {
-            if (strcmp(nombre, posLista->nombCancion) == 0)
-            {
-                printf("Nombre: %s\n", posLista->nombCancion);
-                printf("Artista: %s\n", posLista->artista);
-                printf("Genero: %s\n", posLista->genero);
-                printf("Año: %s\n", posLista->anyo);
-                printf("Lista: %s\n", posLista->lista);
-                check++;
-                break;
-            }
-            else
-            {
-                posLista = nextList(listaAct);
-                if (posLista == NULL)
-                {
-                    listaAct = nextList(Lista);
-                    if (listaAct == NULL)
-                    {
-                        printf("No se encontro la cancion especificada.\n");
-                        break;
-                    }
-                    posLista = firstList(listaAct);
-                }
-            }
+            printf("%s,", p->nombre);
+            printf("%s,", p->marca);
+            printf("%s,", p->tipo);
+            printf("%i,", p->stock); 
+            printf("%i$\n", p->precio);
+            a++;
         }
+        p= nextMap(Mapa);
+        
     }
-}*/
+    if(a==0)printf("el producto no existe\n");
+}
 //muestra la cantidad de canciones que tiene esta lista 
 /*void mostrarListas(List *Lista)
 {
@@ -529,52 +463,23 @@ void exportarArchivo(char *nombre, Map * lista)
     }
 }*/
 //funcion que muestra todas la canciones de la lista de canciones sin importar el nombre de la lista 
-void mostrarTodasCan(List *Lista)
+void mostrarTodosProductos(Map *Mapa)
 {
     
-    List * list_ = firstList(Lista);
-    cancion* aux = firstList(list_);
-    printf("lista 1\n");
-    //recorre la lista mostrando las canciones que hay en ellas
-    while(aux!=NULL){
+    Producto * p = firstMap(Mapa);
+    while(p!=NULL)
+    {
+        printf("%s,", p->nombre);
+        printf("%s,", p->marca);
+        printf("%s,", p->tipo);
+        printf("%i,", p->stock); 
+        printf("%i$\n", p->precio); 
+        p= nextMap(Mapa);
         
-        printf("%s,", aux->nombCancion);
-        printf("%s,", aux->artista);
-        printf("%s,", aux->genero);
-        printf("%s\n", aux->anyo);
-        aux=nextList(list_);
-        
-
     }
     
-    
-    list_ = nextList(Lista);
-    aux = firstList(list_);
-    printf("\n");
-    printf("lista 2\n");
-    while(aux != NULL)
-    {
-        printf("%s,", aux->nombCancion);
-        printf("%s,", aux->artista);
-        printf("%s,", aux->genero);
-        printf("%s\n", aux->anyo);
-        aux=nextList(list_);
-    }
-    
-    list_ = nextList(Lista);
-    aux = firstList(list_);
-    printf("\n");
-    printf("lista 3\n");
-    while(aux!= NULL)
-    {
-        printf("%s,", aux->nombCancion);
-        printf("%s,", aux->artista);
-        printf("%s,", aux->genero);
-        printf("%s\n", aux->anyo);
-        aux=nextList(list_);
  
-    }
-    printf("\n");
+    
 }
 //muestra una lista segun el nombre de la lista que ingreso el usuario 
 /*void mostrarUnaList(List* lista, char* Nlista)
