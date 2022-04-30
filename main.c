@@ -529,7 +529,7 @@ void exportarArchivo(char *nombre, Map * lista)
     }
 }*/
 //funcion que muestra todas la canciones de la lista de canciones sin importar el nombre de la lista 
-/*void mostrarTodasCan(List *Lista)
+void mostrarTodasCan(List *Lista)
 {
     
     List * list_ = firstList(Lista);
@@ -575,7 +575,7 @@ void exportarArchivo(char *nombre, Map * lista)
  
     }
     printf("\n");
-}*/
+}
 //muestra una lista segun el nombre de la lista que ingreso el usuario 
 /*void mostrarUnaList(List* lista, char* Nlista)
 {
