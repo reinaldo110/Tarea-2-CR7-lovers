@@ -146,56 +146,63 @@ void eleccionFunciones(int *funcion)
 
 }
 //funcion para agregar canciones de una lista ya existente o si no existe crear esa lista y agregarla 
-/*void agregarCancion(List *listaProd, Producto *c)
+void agregarProducto(Map *Mapa)
 {
-    short aux = 1;
-    List *listaAux;
-    Producto * prodAux;
-    int checks=0;
+    char * dump;
+    Producto *nuevoProducto = (Producto *) malloc (sizeof(Producto));
+    char nombre[100];
+    char marca[100];
+    char tipo[100];
+    int stock=0;
+    int precio=0;
+    int variable=0;
+    Producto * p = firstMap(Mapa);
 
-    listaAux = firstList(listaProd);
-    prodAux = firstList(listaAux); 
+    printf("ingrese nombre del producto: ");
+    getchar();
+    fgets(nombre, 100, stdin);
+    nombre[strcspn( nombre, "\n" )] = '\0';
+    nuevoProducto->nombre=strdup(nombre);
+
+    printf("ingrese marca del producto: ");
+    getchar();
+    fgets(marca, 100, stdin);
+    marca[strcspn( marca, "\n" )] = '\0';
+    nuevoProducto->marca=strdup(marca);
+
+    printf("ingrese tipo del producto: ");
+    getchar();
+    fgets(tipo, 100, stdin);
+    tipo[strcspn( tipo, "\n" )] = '\0';
+    nuevoProducto->tipo=strdup(tipo);
+
+    printf("ingrese stock del producto: ");
+    scanf("%d",&stock);
+    nuevoProducto->stock=stock;
+    printf("ingrese precio del producto: ");
+    scanf("%d",&precio);
+    nuevoProducto->precio=precio;
+
+    while(p!=NULL)
+    {
+        if(stricmp(p->nombre,nombre)==0)
+        {
+            p->stock++;
+            variable++;
+        }
+        p= nextMap(Mapa);
+        
+    }
+    if(variable==0)
+    {
+        insertMap(Mapa,nuevoProducto->nombre,nuevoProducto);
+    }
+
+
     
-    while (listaAux != NULL && aux != 0)//ciclo repetitivo para encontrar la lista a la que se tiene que agregar la nueva cancion 
-    {
-        if (strcmp(c->lista, prodAux->lista) == 0)
-        {
-            aux = 0;
-            break;
-        }
-        listaAux = nextList(listaProd);
-        if(listaAux == NULL) break;
-        prodAux = firstList(listaAux);
-    }
 
-    if(aux == 1)//si aux==1 la lista que se tiene que agregar no existe 
-    {
-        List * lista4 = createList();
-        pushBack(lista4,c);
-        pushBack(listaProd,lista4);
-        printf("Se ha creado una nueva lista con la cancion ingresada\n");
-    }
-    else
-    {
-        prodAux = firstList(listaAux);
-        while(prodAux != NULL)
-        {
-            //(202)if para comparar si la cancion existe ya dentor de la lista o no
-            if(strcmp(c->nombCancion, prodAux->nombCancion)==0 && strcmp(c->artista, prodAux->artista)==0 && strcmp(c->anyo, prodAux->anyo)==0 )
-            {
-                printf("La cancion que desea ingresar ya se en cuentra en la lista\n");
-                checks++;
-            }
-            prodAux = nextList(listaAux);
-        }
-        if(checks==0){
-            pushBack(listaAux,c);
-            printf("La cancion a sido ingresada con exito\n");
-        }
-       
-    }
 
-}*/
+}
 //funcion para eliminar una cancion de todas las listas existentes
 /*void eliminarCancion(List *Lista, Producto *c)
 {
@@ -287,11 +294,10 @@ int main()
             exportarArchivo(busq, listaProd);
             break;
             
-            /*case 3:
-            p=leerCancion(funcion);
-            agregarCancion(listaProd, p);
+            case 3:
+            agregarProducto(listaProd);
             break;
-            */
+            
             case 6:
             printf("Ingrese nombre del producto: ");
             getchar();
