@@ -87,7 +87,7 @@ void eleccionFunciones(int *funcion)
     printf("Seleccione 11 si quiere mostrar los carritos de compra\n");
     scanf("%i",funcion);//funcion que quiere ingresar
 }
-//funcion que inserta el producto en el carrito
+//funcion para agregar productos a la lista
 void insertarEnCarrito(List *carro, Pro_Carrito *producto){
     Pro_Carrito *aux = firstList(carro);
     printf("a");
@@ -95,20 +95,12 @@ void insertarEnCarrito(List *carro, Pro_Carrito *producto){
         aux->cantidad += producto->cantidad;
         return;
     }
-<<<<<<< HEAD
-    while(aux != producto)
-    {
-        aux = (Pro_Carrito*)nextList(carro); //Error IS JIR
-        printf("b");
-        if(aux == producto){
-=======
     while (aux != producto)
     {
         aux = (Pro_Carrito*) nextList(carro); //Error IS JIR
         printf("b");
         if(aux == producto)
         {
->>>>>>> reinaldo
             aux->cantidad += producto->cantidad;
             break;
         }
@@ -123,7 +115,7 @@ void insertarEnCarrito(List *carro, Pro_Carrito *producto){
         pushBack(carro, producto);
     }
 }
-//funcion para agregar un elemento al carrito
+
 void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     
     char nombrePro[100];
@@ -153,35 +145,30 @@ void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     { 
         List *carrActual = ptr->Productos;
         insertarEnCarrito(carrActual, producto);
-        printf("su producto ha sido ingresado correctamente");
+        printf("su producto a sido ingresado correctamente");
     }
-<<<<<<< HEAD
     else
     {
-=======
-    else{
->>>>>>> reinaldo
         List *ListPro = createList();
         Carrito *aux = malloc(sizeof(Carrito));
         pushFront(ListPro, producto);
         aux->Productos = ListPro;
         aux->NombreCarr = strdup(busq);
         insertMap(carro, aux->NombreCarr, aux);
-        aux = firstMap(carro);
+        aux=firstMap(carro);
         printf("%s\n", aux->NombreCarr);
         Pro_Carrito *aux2 = firstList(aux->Productos);
         printf("%s, %d\n", aux2->nombrePro, aux2->cantidad);
-        printf("su producto ha sido ingresado correctamente\n");
+        printf("su producto a sido ingresado correctamente\n");
     }
-
  }
-//funcion para eliminar un elemento del carrito
+
 void eliminarUlt(carro, busq){
     List *ptr;
     Carrito *aux = searchMap(carro, busq);
     ptr = aux->Productos;
     popBack(ptr);
-    printf("El producto se ha eliminado con exito\n");
+    printf("EL producto se a eliminado con exito\n");
 }
 void agregarProducto(Map *Mapa)
 {
