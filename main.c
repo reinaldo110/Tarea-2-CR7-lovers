@@ -13,6 +13,19 @@ typedef struct
     int precio;
 }Producto;
 
+typedef struct
+{
+    char *nombrePro;
+    int cantidad;
+    int precio; 
+}Pro_Carrito;
+
+typedef struct{
+    char *NombreCarr;
+    List *Productos;
+    int precio;
+}Carrito;
+
 //funciones 
 void exportarArchivo(char *, Map * );
 void buscarTipo(Map*, char*);
@@ -75,10 +88,87 @@ void eleccionFunciones(int *funcion)
     scanf("%i",funcion);//funcion que quiere ingresar
 }
 //funcion para agregar productos a la lista
-/*void agregarProducto(Map *listaProd, Producto *p)
-{
+void insertarEnCarrito(List *carro, Pro_Carrito *producto){
+    Pro_Carrito *aux = firstList(carro);
+    printf("a");
+    if(aux==producto){
+        aux->cantidad+=producto->cantidad;
+        return;
+    }
+    while (aux!=producto)
+    {
+        aux=(Pro_Carrito*)nextList(carro); //Error IS JIR
+        printf("b");
+        if(aux==producto){
+            aux->cantidad+=producto->cantidad;
+            break;
+        }
+        if(aux==NULL)
+        {
+           break;
+        }
+        printf("c");
+    }
+    if(aux==NULL)
+    {
+        pushBack(carro, producto);
+    }
+}
 
-}*/
+void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
+    
+    char nombrePro[100];
+    int cantidad;   
+                          
+    Pro_Carrito* producto = (Pro_Carrito*) malloc (sizeof(Pro_Carrito));
+    Carrito *ptr;
+
+    printf("ingrese el nombre del producto: \n");
+    fgets(nombrePro, 100, stdin);
+    nombrePro[strcspn( nombrePro, "\n" )] = '\0';
+    printf("ingrese la cantidad de unidades: \n");
+    scanf("%d", &cantidad);
+
+    //Producto *auxPro=searchMap(lista, nombrePro);
+
+    producto->cantidad=cantidad;
+    producto->nombrePro=strdup(nombrePro);
+    //producto->precio=auxPro->precio;
+    //printf("%d\n", producto->precio);
+    
+    //Archivo_100productos.csv
+    //Salchichas de pavo 1 Kg
+    ptr=(Carrito*) searchMap(carro, busq);
+    
+    if(ptr!=NULL)
+    { 
+        List *carrActual=ptr->Productos;
+        insertarEnCarrito(carrActual, producto);
+        printf("su producto a sido ingresado correctamente");
+    }
+    else{
+        List *ListPro= createList();
+        Carrito *aux= malloc(sizeof(Carrito));
+        pushFront(ListPro, producto);
+        aux->Productos=ListPro;
+        aux->NombreCarr=strdup(busq);
+        insertMap(carro, aux->NombreCarr, aux);
+        aux=firstMap(carro);
+        printf("%s\n", aux->NombreCarr);
+        Pro_Carrito *aux2=firstList(aux->Productos);
+        printf("%s, %d\n", aux2->nombrePro, aux2->cantidad);
+        printf("su producto a sido ingresado correctamente\n");
+    }
+
+ }
+
+void eliminarUlt(carro, busq){
+    List *ptr;
+    Carrito *aux=searchMap(carro, busq);
+    ptr=aux->Productos;
+    popBack(ptr);
+    printf("EL producto se a eliminado con exito\n");
+}
 //main
 int main()
 {
@@ -88,6 +178,7 @@ int main()
     char busq[100];
     FILE *entrada;
     Map* listaProd;
+    Map* carro;
     eleccionFunciones(&funcion);
     while (funcion != 0)//ciclo repetitivo que permite seleccionar la funcion que quiere utilizar y con un 0 salir de estas 
     {
@@ -145,11 +236,19 @@ int main()
             break;
 
             case 8:
-            //agregarCarrito();
+            printf("ingrese el nombre del Carrito de compra: ");
+            getchar();
+            fgets(busq, 100, stdin);
+            busq[strcspn( busq, "\n" )] = '\0';
+            AgregarAlCarrito(carro, busq, listaProd);
             break;
-            
+
             case 9:
-            //eliminarCarrito();
+            printf("Ingrese el nombre del carro: \n");
+            getchar();
+            fgets(busq, 100, stdin);
+            busq[strcspn( busq, "\n" )] = '\0';
+            eliminarUlt(carro, busq);
             break;
 
             case 10:
