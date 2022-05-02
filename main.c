@@ -137,9 +137,10 @@ void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     //producto->precio=auxPro->precio;
     //printf("%d\n", producto->precio);
     
-    //Archivo_100productos.csv
+    //c
     //Salchichas de pavo 1 Kg
     ptr = (Carrito*) searchMap(carro, busq);
+    printf("a");
     
     if(ptr != NULL)
     { 
@@ -151,6 +152,7 @@ void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     {
         List *ListPro = createList();
         Carrito *aux = malloc(sizeof(Carrito));
+        printf("b");
         pushFront(ListPro, producto);
         aux->Productos = ListPro;
         aux->NombreCarr = strdup(busq);
@@ -163,7 +165,7 @@ void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     }
  }
 
-void eliminarUlt(carro, busq){
+void eliminarUlt(Map* carro, char busq[]){
     List *ptr;
     Carrito *aux = searchMap(carro, busq);
     ptr = aux->Productos;
@@ -218,6 +220,7 @@ void agregarProducto(Map *Mapa)
     }
 
 }
+//Archivo_100productos.csv acondicionador 900 ml
 
 //main
 int main()
@@ -228,7 +231,7 @@ int main()
     char busq[100];
     FILE *entrada;
     Map* listaProd;
-    Map* carro;
+    Map* carro=createMap(is_equal_string);
     eleccionFunciones(&funcion);
     while (funcion != 0)//ciclo repetitivo que permite seleccionar la funcion que quiere utilizar y con un 0 salir de estas 
     {
