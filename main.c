@@ -137,7 +137,7 @@ void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     //producto->precio=auxPro->precio;
     //printf("%d\n", producto->precio);
     
-    //c
+    //Archivo_100productos.csv
     //Salchichas de pavo 1 Kg
     ptr = (Carrito*) searchMap(carro, busq);
     printf("a");
@@ -220,7 +220,29 @@ void agregarProducto(Map *Mapa)
     }
 
 }
-//Archivo_100productos.csv acondicionador 900 ml
+//Archivo_100productos.csv acondicionador 900 ml alimento seco perro adulto 15 kg
+void mostarCarritos(Map* carro)
+{
+    Carrito *aux = firstMap(carro);
+    while(aux!=NULL)
+    {
+        printf("Nombre carrito: %s\n",aux->NombreCarr);
+        Pro_Carrito *ptr =firstList(aux->Productos);
+       
+
+        if(ptr==NULL){
+            printf("esta vacio");
+            break;
+        }
+        while(ptr!=NULL)
+        {
+            printf("a");
+            printf("Nombre: %s\n", ptr->nombrePro);
+            ptr=nextList(aux->Productos);
+        }
+        aux=nextMap(carro);
+    }
+}
 
 //main
 int main()
@@ -309,7 +331,7 @@ int main()
             break;
             
             case 11:
-            //mostarCarritos();
+            mostarCarritos(carro);
             break;
 
             default:
