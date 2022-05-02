@@ -174,12 +174,8 @@ void agregarProducto(Map *Mapa)
 {
     char * dump;
     Producto *nuevoProducto = (Producto *) malloc (sizeof(Producto));
-    char nombre[100];
-    char marca[100];
-    char tipo[100];
-    int stock = 0;
-    int precio = 0;
-    int variable = 0;
+    char nombre[100], marca[100], tipo[100];
+    int stock = 0, precio = 0, variable = 0;
     Producto * p = firstMap(Mapa);
 
     printf("ingrese nombre del producto: ");
