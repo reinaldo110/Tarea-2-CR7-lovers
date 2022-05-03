@@ -76,44 +76,65 @@ void eleccionFunciones(int *funcion)
 {
     printf("seleccione 0 para salir\n");
     printf("Seleccione 1 para importar un archivo\n");//funcion esencial para la funcionalidad del codigo, listo
-    printf("Seleccione 2 para exportar a un archivo\n");//listo
-    printf("Seleccione 3 si quiere agregar un producto a la lista\n");//listo?
-    printf("Seleccione 4 si quiere buscar un producto por su tipo\n");//listo
-    printf("Seleccione 5 si quiere buscar por marca del/los productos\n");//listo
-    printf("Seleccione 6 si quiere buscar un producto por su nombre\n");//listo
-    printf("Seleccione 7 si quiere mostrar todos los productos\n");//listo
-    printf("Seleccione 8 si quiere agregar un producto a su carrito\n");//progreso
-    printf("Seleccione 9 si quiere eliminar un producto de su carrito\n");//progreso
+    printf("Seleccione 2 para exportar a un archivo\n");
+    printf("Seleccione 3 si quiere agregar un producto a la lista\n");
+    printf("Seleccione 4 si quiere buscar un producto por su tipo\n");
+    printf("Seleccione 5 si quiere buscar por marca del/los productos\n");
+    printf("Seleccione 6 si quiere buscar un producto por su nombre\n");
+    printf("Seleccione 7 si quiere mostrar todos los productos\n");
+    printf("Seleccione 8 si quiere agregar un producto a su carrito\n");
+    printf("Seleccione 9 si quiere eliminar un producto de su carrito\n");
     printf("Seleccione 10 si quiere concretar su compra\n");
     printf("Seleccione 11 si quiere mostrar los carritos de compra\n");
     scanf("%i",funcion);//funcion que quiere ingresar
 }
-//funcion para agregar productos a la lista
-void insertarEnCarrito(List *carro, Pro_Carrito *producto){
+//funcion para agregar productos a un carrito ya existente
+void insertarEnCarrito(List *carro, Pro_Carrito *producto,Carrito*ptr,Producto* auxpro){
     Pro_Carrito *aux = firstList(carro);
 
     if(aux == producto){
         aux->cantidad += producto->cantidad;
+        while(auxpro->stock<aux->cantidad)
+        {
+            aux->cantidad -= producto->cantidad;
+            printf("no hay stock suficiente para la cantidad que desea agregar al carrito \n");
+            printf("el stock disponible es %i,ingrese una cantidad dentro del stock\n",auxpro->stock);
+            scanf("%d", &producto->cantidad);
+
+        }
+        aux->cantidad += producto->cantidad;
         return;
     }
-    while (aux != producto)
+    while (aux != producto)//while para confirma si el producto existe o no dentro del carrito
     {
         aux = (Pro_Carrito*) nextList(carro);
-        if(aux == producto)
+        if(aux == producto)//producto ya dentro del carrito
         {
+            aux->cantidad += producto->cantidad;
+            while(auxpro->stock<aux->cantidad)
+            {
+                aux->cantidad -= producto->cantidad;
+                printf("no hay stock suficiente para la cantidad que desea agregar al carrito \n");
+                printf("el stock disponible es %i,ingrese una cantidad dentro del stock\n",auxpro->stock);
+                scanf("%d", &producto->cantidad);
+
+            }
             aux->cantidad += producto->cantidad;
             break;
         }
-        if(aux == NULL)
+        if(aux == NULL)//si llega al final de la lista finaliza el while
         {
            break;
         }
     }
-    if(aux == NULL)
+    if(aux == NULL)//if no existe el producto en el carrito y lo agrega
     {
         pushBack(carro, producto);
+        ptr->cantidad+=producto->cantidad;
+        
     }
 }
+//funcion mayor para agregar productos al carrito
 
 void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     
@@ -130,25 +151,28 @@ void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
     scanf("%d", &cantidad);
 
     Producto *auxPro=searchMap(lista, nombrePro);
+    while(auxPro->stock<cantidad)
+    {
+        printf("no hay stock suficiente para la cantidad que desea agregar al carrito \n");
+        printf("el stock disponible es %i,ingrese una cantidad dentro del stock\n",auxPro->stock);
+        scanf("%d", &cantidad);
 
+    }
     producto->cantidad = cantidad;
     producto->nombrePro = strdup(nombrePro);
     producto->precio=auxPro->precio;
-    
-    
-    //Archivo_100productos.csv
-    //Salchichas de pavo 1 Kg
+
     ptr = (Carrito*) searchMap(carro, busq);
-    
-    
-    if(ptr != NULL)
+    //condiciones para saber si al carrito que se desia ngresar existe o no
+    if(ptr != NULL)//si se cumple existe el carrito
     { 
         List *carrActual = ptr->Productos;
-        insertarEnCarrito(carrActual, producto);
+        insertarEnCarrito(carrActual, producto,ptr,auxPro);
         printf("su producto a sido ingresado correctamente");
     }
-    else
+    else//no existe el carrito
     {
+
         List *ListPro = createList();
         Carrito *aux = malloc(sizeof(Carrito));
         pushFront(ListPro, producto);
@@ -157,17 +181,24 @@ void AgregarAlCarrito(Map* carro, char busq[], Map* lista){
         insertMap(carro, aux->NombreCarr, aux);
         aux=firstMap(carro);
         Pro_Carrito *aux2 = firstList(aux->Productos);
+        aux->cantidad=cantidad;
         printf("su producto a sido ingresado correctamente\n");
+
     }
  }
+//funcion que elimina el ultimo producto ingresado al carrito
 
 void eliminarUlt(Map* carro, char busq[]){
     List *ptr;
+    
     Carrito *aux = searchMap(carro, busq);
+    Pro_Carrito *aux2=lastList(aux->Productos);
+    aux->cantidad-=aux2->cantidad;
     ptr = aux->Productos;
     popBack(ptr);
     printf("EL producto se a eliminado con exito\n");
 }
+//funcion que agrega un nuevo producto al mapa de productos 
 void agregarProducto(Map *Mapa)
 {
     char * dump;
@@ -201,27 +232,28 @@ void agregarProducto(Map *Mapa)
     scanf("%d", &precio);
     nuevoProducto->precio = precio;
 
-    while(p != NULL)
+    while(p != NULL)//comprobar si el producto ingresado ya existe o no
     {
         if(stricmp(p->nombre,nombre) == 0)
         {
-            p->stock++;
+            p->stock+=stock;
             variable++;
         }
         p = nextMap(Mapa);
     }
-    if(variable==0)
+    if(variable==0)//si no existe se inserta en el mapa
     {
         insertMap(Mapa,nuevoProducto->nombre,nuevoProducto);
     }
-
 }
+
+//funcion que concreta la compra del carrito eliminando el carrito y restando el stock
 void concretarCompra(Map*carro,char busq[],Map* listprod)
 {   
     Carrito *aux = searchMap(carro,busq);
     Pro_Carrito *ptr = firstList(aux->Productos);
     Producto* proaux;
-    while(ptr!=NULL)
+    while(ptr!=NULL)//while para mostrar los productos que contiene el carrito
     {
         printf("%s\n",ptr->nombrePro);
         
@@ -231,28 +263,32 @@ void concretarCompra(Map*carro,char busq[],Map* listprod)
         ptr = nextList(aux->Productos);
 
     }
-    printf("total a pagar %i",aux->precio);
+    printf("total a pagar %i\n",aux->precio);
     eraseMap(carro,busq);
 
 
 
 
 }
-//Archivo_100productos.csv acondicionador 900 ml alimento seco perro adulto 15 kg
+
+//funcion que muestra todos los carritos mostrando al cantidad total de 
+//productos del carro y el nombre de dicho producto utilizando dos punteros
+//para recorrer el mapa y luego la lista dentro del mapa
 void mostarCarritos(Map* carro)
 {
     Carrito *aux = firstMap(carro);
-    while(aux!=NULL)
+    while(aux!=NULL)//while que muestra carro por carro
     {
         printf("Nombre carrito: %s\n",aux->NombreCarr);
+        printf("Cantidad productos: %i\n",aux->cantidad);
         Pro_Carrito *ptr = firstList(aux->Productos);
        
 
         if(ptr==NULL){
-            printf("esta vacio\n");
+            printf("El carrito esta vacio\n");
             break;
         }
-        while(ptr!=NULL)
+        while(ptr!=NULL)//while que muestra los productos que tiene el carro
         {
             
             printf("Nombre: %s\n", ptr->nombrePro);
@@ -262,7 +298,7 @@ void mostarCarritos(Map* carro)
     }
 }
 
-//main
+//funcion main 
 int main()
 {
     int funcion;
